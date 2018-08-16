@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB99ADFD-A841-4DC4-92E2-C8AA2D03BB61}</ProjectGuid>
+    <ProjectGuid>{E50CC86C-E559-49CB-A21D-7D21F8E4CAD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Battleship</RootNamespace>
-    <AssemblyName>Battleship</AssemblyName>
+    <RootNamespace>Battleship.Common</RootNamespace>
+    <AssemblyName>Battleship.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,14 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BattleshipStateTracker.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Battleship.Common\Battleship.Common.csproj">
-      <Project>{e50cc86c-e559-49cb-a21d-7d21f8e4cad7}</Project>
-      <Name>Battleship.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

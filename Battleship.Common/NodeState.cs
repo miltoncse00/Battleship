@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Battleship
+namespace Battleship.Common
 {
-    public class Class1
+    public enum NodeState
     {
+        Empty,
+        Occupied,
+        Hit,
+        Miss
     }
 }
