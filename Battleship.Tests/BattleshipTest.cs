@@ -80,19 +80,7 @@ namespace Battleship.Tests
             battleshipStateTracker1.AddAShipToBoard(2, 10, 1, Orientation.Horizontal);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException))]
-        public void Given_BattleshipGenerator_When_Attack_at_Position_ReturnException()
-        {
-            int xLength = 10;
-            int yLength = 10;
-            List<Node> board = GenerateBoard1(xLength, yLength);
-            battleshipMediator._player1 = battleshipStateTracker1;
-            NodeState nodeState = battleshipStateTracker1.Attack(1, 1);
-
-        }
-
-
+      
         [TestMethod]
         public void Given_BattleshipGenerator_When_Attack_at_PositionWithSecondPlayerWithoutShip_ReturnMissed()
         {
