@@ -9,12 +9,18 @@ namespace Battleship.Tests
     [TestClass]
     public class BattleshipTest
     {
-        BattleshipGenerator battleshipGenerator;
+        BattleshipStateTrackerStab battleshipStateTracker1;
+        BattleshipStateTrackerStab battleshipStateTracker2;
+
+        TwoPlayerBattleshipMediator battleshipMediator;
 
         [TestInitialize]
         public void Initilize()
         {
-            battleshipGenerator = new BattleshipGenerator();
+
+            battleshipMediator = new TwoPlayerBattleshipMediator();
+            battleshipStateTracker1 = new BattleshipStateTrackerStab(battleshipMediator);
+
         }
 
         [TestMethod]
@@ -22,16 +28,23 @@ namespace Battleship.Tests
         {
             int xLength = 10;
             int yLength = 10;
-            List<Node> board = GenerateBoard(xLength, yLength);
+            List<Node> board = GenerateBoard1(xLength, yLength);
             Assert.AreEqual(board.Count, xLength * yLength);
             var nodeStateCount = board.Select(s => s.NodeState == NodeState.Empty).Count();
             Assert.IsTrue(nodeStateCount == xLength * yLength);
         }
 
-        private List<Node> GenerateBoard(int xLength, int yLength)
+        private List<Node> GenerateBoard1(int xLength, int yLength)
         {
-            battleshipGenerator.CreateBorad(xLength, yLength);
-            List<Node> board = battleshipGenerator.GetBroard();
+            battleshipStateTracker1.CreateBorad(xLength, yLength);
+            List<Node> board = battleshipStateTracker1.GetBroard();
+            return board;
+        }
+
+        private List<Node> GenerateBoard2(int xLength, int yLength)
+        {
+            battleshipStateTracker2.CreateBorad(xLength, yLength);
+            List<Node> board = battleshipStateTracker2.GetBroard();
             return board;
         }
 
@@ -41,7 +54,7 @@ namespace Battleship.Tests
         {
             int xLength = 0;
             int yLength = 10;
-            List<Node> board = GenerateBoard(xLength, yLength);
+            List<Node> board = GenerateBoard1(xLength, yLength);
         }
 
         [TestMethod]
@@ -49,11 +62,11 @@ namespace Battleship.Tests
         {
             int xLength = 10;
             int yLength = 10;
-            List<Node> board = GenerateBoard(xLength, yLength);
-            battleshipGenerator.AddAShipToBoard(2, 1, 1, Orientation.Horizontal);
+            List<Node> board = GenerateBoard1(xLength, yLength);
+            battleshipStateTracker1.AddAShipToBoard(2, 1, 1, Orientation.Horizontal);
 
             Assert.IsTrue(board.Any(s => s.X == 1 && s.Y == 1 && s.NodeState == NodeState.Occupied));
-            Assert.IsTrue(board.Any(s => s.X == 3 && s.Y == 1 && s.NodeState == NodeState.Occupied));
+            Assert.IsTrue(board.Any(s => s.X == 2 && s.Y == 1 && s.NodeState == NodeState.Occupied));
 
         }
 
@@ -63,8 +76,57 @@ namespace Battleship.Tests
         {
             int xLength = 10;
             int yLength = 10;
-            List<Node> board = GenerateBoard(xLength, yLength);
-            battleshipGenerator.AddAShipToBoard(2, 9, 1, Orientation.Horizontal);          
+            List<Node> board = GenerateBoard1(xLength, yLength);
+            battleshipStateTracker1.AddAShipToBoard(2, 10, 1, Orientation.Horizontal);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void Given_BattleshipGenerator_When_Attack_at_Position_ReturnException()
+        {
+            int xLength = 10;
+            int yLength = 10;
+            List<Node> board = GenerateBoard1(xLength, yLength);
+            battleshipMediator._player1 = battleshipStateTracker1;
+            NodeState nodeState = battleshipStateTracker1.Attack(1, 1);
+
+        }
+
+
+        [TestMethod]
+        public void Given_BattleshipGenerator_When_Attack_at_PositionWithSecondPlayerWithoutShip_ReturnMissed()
+        {
+            int xLength = 10;
+            int yLength = 10;
+            List<Node> board = GenerateBoard1(xLength, yLength);
+            battleshipMediator._player1 = battleshipStateTracker1;
+            battleshipStateTracker2 = new BattleshipStateTrackerStab(battleshipMediator);
+
+            GenerateBoard2(xLength, yLength);
+            battleshipMediator._player2 = battleshipStateTracker2;
+
+            NodeState nodeState = battleshipStateTracker1.Attack(1, 1);
+            Assert.IsTrue(nodeState == NodeState.Miss);
+
+        }
+
+
+        [TestMethod]
+        public void Given_BattleshipGenerator_When_Attack_at_PositionWithSecondPlayerAllShipHit_ReturnAllBattleshipSunk()
+        {
+            int xLength = 10;
+            int yLength = 10;
+            List<Node> board = GenerateBoard1(xLength, yLength);
+            battleshipMediator._player1 = battleshipStateTracker1;
+            battleshipStateTracker2 = new BattleshipStateTrackerStab(battleshipMediator);
+
+            GenerateBoard2(xLength, yLength);
+            battleshipMediator._player2 = battleshipStateTracker2;
+            battleshipStateTracker2.AddAShipToBoard(1, 1, 1, Orientation.Horizontal);
+            NodeState nodeState = battleshipStateTracker1.Attack(1, 1);
+            string message = battleshipStateTracker1.GetMessage();
+            Assert.IsTrue(message == Resources.AllBattleShipAreSunk);
+
         }
 
     }

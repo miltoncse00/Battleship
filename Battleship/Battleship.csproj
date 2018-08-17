@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BattleshipGenerator.cs" />
+    <Compile Include="BattleshipStateTracker.cs" />
+    <Compile Include="BattleshipMediator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TwoPlayerBattleshipMediator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Battleship.Common\Battleship.Common.csproj">

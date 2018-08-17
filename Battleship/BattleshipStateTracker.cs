@@ -7,11 +7,26 @@ using System.Threading.Tasks;
 
 namespace Battleship
 {
-    public class BattleshipGenerator
+    public class BattleshipStateTracker
     {
-        List<Node> nodes;
+        protected BattleshipMediator _battleshipMediator;
+        protected List<Node> nodes;
         int _xDimension = 0;
         int _yDimension = 0;
+        protected string receivedMessage = string.Empty;
+        public BattleshipStateTracker(BattleshipMediator battleshipMediator)
+        {
+            _battleshipMediator = battleshipMediator;
+        }
+
+        internal NodeState SendAttackNotification(int x, int y)
+        {
+            var nodeState = nodes.First(s => s.X == x && s.Y == y).Attacked();
+            if (nodes.Any(s => s.NodeState == NodeState.Occupied) == false && nodes.Any(s => s.NodeState == NodeState.Hit))
+                _battleshipMediator.SendMessageToReceiver(Resources.AllBattleShipAreSunk, this);
+            return nodeState;
+        }
+
         public void CreateBorad(int xDimension, int yDimension)
         {
             if (xDimension <= 0 || yDimension <= 0)
@@ -27,11 +42,7 @@ namespace Battleship
                     nodes.Add(new Node(x, y));
                 }
             }
-        }
 
-        public List<Battleship.Common.Node> GetBroard()
-        {
-            return nodes;
         }
 
         public void AddAShipToBoard(int length, int xTop, int yTop, Orientation orientation)
@@ -39,9 +50,9 @@ namespace Battleship
             var xBottom = xTop;
             var yBottom = yTop;
             if (orientation == Orientation.Vertical)
-                yBottom = yBottom + length;
+                yBottom = yBottom + length - 1;
             else
-                xBottom = xBottom + length;
+                xBottom = xBottom + length - 1;
             if (yBottom > _yDimension || xBottom > _xDimension)
                 throw new ArgumentOutOfRangeException();
 
@@ -52,6 +63,16 @@ namespace Battleship
                     nodes.First(s => s.X == x && s.Y == y).Occupy();
                 }
             }
+        }
+
+
+        public NodeState Attack(int x, int y)
+        {
+            return _battleshipMediator.SendAttackNotification(x, y, this);
+        }
+        internal void ReceiveNotification(string message)
+        {
+            receivedMessage = message;
         }
     }
 }

@@ -22,5 +22,18 @@ namespace Battleship.Common
         {
             NodeState = NodeState.Occupied;
         }
+
+        public NodeState Attacked()
+        {
+            if (NodeState == NodeState.Empty)
+            {
+                NodeState = NodeState.Miss;
+            }
+            else if (NodeState == NodeState.Occupied)
+            {
+                NodeState = NodeState.Hit;
+            }
+            return NodeState;
+        }
     }
 }

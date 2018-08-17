@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Battleship.Common
 {
-    public enum NodeState
+    public class Resources
     {
-        Empty,
-        Occupied,
-        Hit,
-        Miss,
+        public const string AllBattleShipAreSunk = "All battleships are sunk";
     }
 }
