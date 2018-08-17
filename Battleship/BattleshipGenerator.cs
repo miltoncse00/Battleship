@@ -10,14 +10,14 @@ namespace Battleship
     public class BattleshipGenerator
     {
         List<Node> nodes;
-        int _xDimention = 0;
-        int _yDimention = 0;
-        public void CreateBorad(int xDimention, int yDimention)
+        int _xDimension = 0;
+        int _yDimension = 0;
+        public void CreateBorad(int xDimension, int yDimension)
         {
-            if (xDimention <= 0 || yDimention <= 0)
+            if (xDimension <= 0 || yDimension <= 0)
                 throw new ArgumentOutOfRangeException();
-            _xDimention = xDimention;
-            _yDimention = yDimention;
+            _xDimension = xDimension;
+            _yDimension = yDimension;
 
             nodes = new List<Node>();
             for (int x = 1; x <= 10; x++)
@@ -42,6 +42,8 @@ namespace Battleship
                 yBottom = yBottom + length;
             else
                 xBottom = xBottom + length;
+            if (yBottom > _yDimension || xBottom > _xDimension)
+                throw new ArgumentOutOfRangeException();
 
             for (var x = xTop; x <= xBottom; x++)
             {
