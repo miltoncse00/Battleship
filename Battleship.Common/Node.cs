@@ -8,8 +8,19 @@ namespace Battleship.Common
 {
     public class Node
     {
+        public Node(int x, int y)
+        {
+            X = x;
+            Y = y;
+            NodeState = NodeState.Empty;
+        }
         public int X { get; set; }
         public int Y { get; set; }
-        public NodeState NodeState { get; set; }
+        public NodeState NodeState { get; private set; }
+
+        public void Occupy()
+        {
+            NodeState = NodeState.Occupied;
+        }
     }
 }
